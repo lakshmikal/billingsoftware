@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>STOCKZ</title>
+    <title>RESTRO</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../../assets/vendors/ti-icons/css/themify-icons.css">
@@ -28,8 +28,8 @@
       <!-- partial:../../partials/_navbar.html -->
       <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-          <a class="navbar-brand brand-logo" href="/index.html"> <span class="text-danger font-weight-bold"><b>STOCKZ</b></span></a>
-          <a class="navbar-brand brand-logo-mini" href="/index.html"><span class="text-danger font-weight-bold"><b>SZ</b></span></a>
+          <a class="navbar-brand brand-logo" href="../../index.html"> <span class="text-danger font-weight-bold"><b>RESTRO</b></span></a>
+          <a class="navbar-brand brand-logo-mini" href="../../index.html"><span class="text-danger font-weight-bold"><b>SZ</b></span></a>
         </div>
         <div class="navbar-menu-wrapper d-flex align-items-stretch">
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -41,7 +41,7 @@
                 <div class="input-group-prepend bg-transparent">
                   <i class="input-group-text border-0 mdi mdi-magnify"></i>
                 </div>
-                <input type="text" class="form-control bg-transparent border-0" placeholder="Search Stocks">
+                <input type="text" class="form-control bg-transparent border-0" placeholder="Search Shipment">
               </div>
             </form>
           </div>
@@ -147,7 +147,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/index.html">
+              <a class="nav-link" href="/../../index.html">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
@@ -191,26 +191,47 @@
                   <div class="card-body">
                     <h4 class="card-title">Add To Your Products</h4>
                     <p class="card-description">Details of the products </p>
-                    <form class="forms-sample">
+                  
                       <div class="form-group">
                         <label for="exampleInputUsername1">Products Name</label>
-                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Product Name">
+                        <input type="text" class="form-control" id="ptoductnameadd" placeholder="Product Name">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputEmail1">Quantity</label>
-                        <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Quantity You buyed">
+                        <input type="number" class="form-control" id="productquantity" placeholder="Quantity You buyed">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputPassword1">Rate Of The Products</label>
-                        <input type="number" class="form-control" id="exampleInputPassword1" placeholder="Total Rate">
+                        <input type="number" class="form-control" id="buyingprice" placeholder="Total Rate">
                       </div>
                    
-                      <a class="nav-link" href="/index.html"><button type="submit" class="btn btn-gradient-primary me-2">Submitted</button></a>
-                    </form>
+                      <button type="submit" class="btn btn-gradient-primary me-2" id="productaddbtn">Submitted</button>
+                    
                   </div>
                 </div>
               </div>
              </div>
+             
+             <table class="table table-hover" id="tableclone">
+              <thead >
+            <tr>
+              <th scope="col">Product Name</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Buying Price</th>
+              <th scope="col">Total Price</th>
+              <th scope="col">Remove</th>
+            </tr>
+          </thead>
+          <tbody id="entereddata">
+
+    
+          </tbody>
+          </table>
+          <div class="col-md-12 d-flex justify-content-center mt-4">
+          <button type="submit" class="btn btn-gradient-primary " id="printbtn">Print</button>
+        </div>
+
+        </div>  
             
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
@@ -227,6 +248,88 @@
       <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
+
+    <script>
+      let productaddbtn = document.getElementById("productaddbtn");
+      let productnameadding = document.getElementById("ptoductnameadd");
+    let productquantity = document.getElementById("productquantity");
+    let buyingprice = document.getElementById("buyingprice");
+    let entereddata = document.getElementById("entereddata")
+
+
+      productaddbtn.addEventListener("click", ()=>{
+
+ 
+    let rowCreate = entereddata.insertRow(entereddata.rows.length)
+    let productnameaddata = rowCreate.insertCell(0)
+    let productquantitydata = rowCreate.insertCell(1)
+    let buyingpricedata = rowCreate.insertCell(2)
+    let totalprice = rowCreate.insertCell(3)
+    let removebtn = rowCreate.insertCell(4)
+
+
+    productnameaddata.innerHTML = productnameadding.value
+    productquantitydata.innerHTML = productquantity.value
+    buyingpricedata.innerHTML = buyingprice.value
+    totalprice.innerHTML = productquantity.value * buyingprice.value
+    removebtn.innerHTML = '<button type="button" onclick="removefunction(this)" class="btn btn-gradient-primary me-2">Remove</button>';
+    
+})
+
+function removefunction(params) {
+         console.log(params);
+         let rowdata = params.parentNode.parentNode;
+         console.log(rowdata);
+         let removeddata = rowdata.parentNode.removeChild(rowdata);
+         console.log(removeddata); 
+}
+
+
+let geneatebtn = document.getElementById("printbtn");
+    geneatebtn.addEventListener("click", function generatingpdf(e) {
+        e.preventDefault();
+
+        // Clone the table
+        let product_table = document.getElementById("tableclone").cloneNode(true);
+
+        // Get the table head and remove the "Edit Data" column
+        let thead = product_table.getElementsByTagName("thead")[0];
+        if (thead) {
+            thead.rows[0].deleteCell(4); // Remove the Edit Data header cell
+        }
+
+        // Get the table body and remove the "Edit Data" column
+        let tbody = product_table.getElementsByTagName("tbody")[0];
+        let rows = tbody.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i].cells.length > 2) {
+                rows[i].deleteCell(4); // Remove the Edit Data cell 
+            }
+        }
+
+        let entire_table = product_table.outerHTML;
+        let newtab = window.open('', '_blank');
+
+        newtab.document.write('<head><style>');
+        newtab.document.write('body { font-family: Arial, sans-serif; }');
+        newtab.document.write('table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }');
+        newtab.document.write('th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }');
+        newtab.document.write('th { background-color: #f2f2f2; }');
+        newtab.document.write('#totalAmount { font-weight: bold; }');
+        newtab.document.write('#invoiceTitle { text-align: center; font-size: 24px; margin-bottom: 20px; }');
+        newtab.document.write('</style>');
+        newtab.document.write('</head><body>');
+        newtab.document.write('<h2 id="invoiceTitle">Stocks added to your Watchlist</h2>');
+        newtab.document.write(entire_table);
+        newtab.document.close();
+        newtab.print();
+    });
+
+  
+
+
+     </script>
     <!-- plugins:js -->
     <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
